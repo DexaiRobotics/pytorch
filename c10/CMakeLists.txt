@@ -18,6 +18,17 @@ set(C10_USE_GLOG ${USE_GLOG}) # used in cmake_macros.h.in
 set(C10_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS}) # used in cmake_macros.h.in
 set(C10_USE_NUMA ${USE_NUMA})
 set(C10_DISABLE_NUMA ${CAFFE2_DISABLE_NUMA}) # used in cmake_macros.h.in
+
+# set GLIBCXX_USE_CXX11_ABI=1 to be compatible with other c++ libraries built
+# using modern compilers
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-register")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-function")
+else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=1")
+endif()
+
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/macros/cmake_macros.h.in
     ${CMAKE_BINARY_DIR}/c10/macros/cmake_macros.h)
